@@ -1,0 +1,56 @@
+extends layout
+
+block content
+  script.
+    $(document).ready(function() {
+      $("#myTable").tablesorter( {headers: {9: { sorter: false}}});
+      $('#checkAllBtn').click(function (event) {
+        $(':checkbox').each(function () {
+          this.checked = true;
+        });
+      });
+    });
+  form(method="post")
+    input(type="button", class="btn btn-primary", id="checkAllBtn", value="Check All")
+    br
+    table(id='myTable', class='table tablesorter table-striped table-bordered table-hover table-condensed')
+      thead
+        tr
+          th Name
+          th Following
+          th Screen Name
+          th Profile Image
+          th Tweet Count
+          th Follower Count
+          th Friend Count
+          th Verified
+          th Report
+      tfoot
+        tr
+          td(colspan="8")
+            nav
+              ul(class="pager")
+                li(class=previous != 0 ? undefined : "disabled")
+                  a(href="/?page=#{previous}") Previous
+                li(class=next != 0 ? undefined : "disabled")
+                  a(href="/?page=#{next}") Next
+          td
+            nav
+              ul(class="pager")
+                li
+                  input(type="submit", class="btn btn-danger", value="Block/Report")
+      tbody
+        for follower in followers
+          tr
+            td #{follower.name}
+            td #{follower.following}
+            td
+              a(href='http://www.twitter.com/'+follower.screen_name, target="_blank") #{follower.screen_name}
+            td
+              img(src="#{follower.profile_image_url}")
+            td #{follower.statuses_count}
+            td #{follower.followers_count}
+            td #{follower.friends_count}
+            td #{follower.verified}
+            td
+              input(type="checkbox", name="report", value=follower.id)
